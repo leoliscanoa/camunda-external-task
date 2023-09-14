@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  camunda:
+    build:
+      context: spring-camunda
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    networks:
+      - spring-boot-camunda-external-task-network
+  spring-api-one:
+    build:
+      context: spring-api-one
+      dockerfile: Dockerfile
+    depends_on:
+      camunda:
+        condition: service_started
+    environment:
+      CAMUNDA_BPM_CLIENT_BASE-URL: http://camunda:8080/camunda-bpmn/engine-rest
+    networks:
+      - spring-boot-camunda-external-task-network
+  spring-api-two:
+    build:
+      context: spring-api-two
+      dockerfile: Dockerfile
+    depends_on:
+      camunda:
+        condition: service_started
+    environment:
+      CAMUNDA_BPM_CLIENT_BASE-URL: http://camunda:8080/camunda-bpmn/engine-rest
+    networks:
+      - spring-boot-camunda-external-task-network
+networks:
+  spring-boot-camunda-external-task-network:
+    driver: bridge
+volumes:
+  db_rest:
+    driver: local

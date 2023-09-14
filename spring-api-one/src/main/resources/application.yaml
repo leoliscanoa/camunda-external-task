@@ -1,0 +1,21 @@
+server:
+  port : 8080
+camunda.bpm:
+  client:
+    base-url: http://camunda:8080/camunda-bpmn/engine-rest # The URL pointing to the Camunda Platform Runtime REST API
+    async-response-timeout: 15000 # Defines the maximum duration of the long-polling request
+    worker-id: spring-boot-client-one # Identifies the worker towards the Engine
+    disable-backoff-strategy: true
+    max-tasks: 5
+    basic-auth: # Configure if REST API is secured with basic authentication
+      username: admin
+      password: admin
+    subscriptions:
+      example-topic-one: # This topic name must match the respective `@ExternalTaskSubscription`
+        lock-duration: 15000 # Defines for how long the External Tasks are locked until they can be fetched again
+        process-definition-key: external-task-process # Filters for External Tasks of this key
+        auto-open: true # Defines whether the subscription is opened automatically or not
+logging:
+  level:
+    '[com.lliscano.springapione]': DEBUG
+    '[org.camunda.bpm.client]': OFF

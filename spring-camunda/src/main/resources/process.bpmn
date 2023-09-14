@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0110823" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="external-task-process" name="External Task" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="Event_0dtq04z" name="Start">
+      <bpmn:outgoing>Flow_1381os3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0yg2qbs" name="End">
+      <bpmn:incoming>Flow_0ou7bsy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1381os3" sourceRef="Event_0dtq04z" targetRef="execute-external-task-one" />
+    <bpmn:serviceTask id="execute-external-task-one" name="Execute external task one" camunda:type="external" camunda:topic="example-topic-one">
+      <bpmn:incoming>Flow_1381os3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zh5z3t</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0zh5z3t" sourceRef="execute-external-task-one" targetRef="Gateway_05eo708" />
+    <bpmn:sequenceFlow id="Flow_0ou7bsy" sourceRef="Activity_0am9xnr" targetRef="Event_0yg2qbs" />
+    <bpmn:userTask id="Activity_0am9xnr" name="Validate variables">
+      <bpmn:incoming>Flow_0nve80j</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ou7bsy</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_05eo708" name="¿Es mayor de edad?">
+      <bpmn:incoming>Flow_0zh5z3t</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t3zywk</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1m7sa88</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1t3zywk" name="NO" sourceRef="Gateway_05eo708" targetRef="Gateway_01jupcg">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{age &lt; 18}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1m7sa88" name="SI" sourceRef="Gateway_05eo708" targetRef="execute-external-task-two">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{age &gt;= 18}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_01jupcg">
+      <bpmn:incoming>Flow_1t3zywk</bpmn:incoming>
+      <bpmn:incoming>Flow_1nara9v</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nve80j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0nve80j" sourceRef="Gateway_01jupcg" targetRef="Activity_0am9xnr" />
+    <bpmn:sequenceFlow id="Flow_1nara9v" sourceRef="execute-external-task-two" targetRef="Gateway_01jupcg" />
+    <bpmn:serviceTask id="execute-external-task-two" name="Execute external task two" camunda:type="external" camunda:topic="example-topic-two">
+      <bpmn:incoming>Flow_1m7sa88</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nara9v</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="external-task-process">
+      <bpmndi:BPMNShape id="Event_0dtq04z_di" bpmnElement="Event_0dtq04z">
+        <dc:Bounds x="152" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="275" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0336jkh_di" bpmnElement="execute-external-task-one">
+        <dc:Bounds x="280" y="210" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_05eo708_di" bpmnElement="Gateway_05eo708" isMarkerVisible="true">
+        <dc:Bounds x="415" y="225" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="406" y="282" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_01jupcg_di" bpmnElement="Gateway_01jupcg" isMarkerVisible="true">
+        <dc:Bounds x="705" y="225" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0yg2qbs_di" bpmnElement="Event_0yg2qbs">
+        <dc:Bounds x="962" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="970" y="275" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ajy7fu_di" bpmnElement="Activity_0am9xnr">
+        <dc:Bounds x="810" y="210" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tu6yzn_di" bpmnElement="execute-external-task-two">
+        <dc:Bounds x="530" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1381os3_di" bpmnElement="Flow_1381os3">
+        <di:waypoint x="188" y="250" />
+        <di:waypoint x="280" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zh5z3t_di" bpmnElement="Flow_0zh5z3t">
+        <di:waypoint x="380" y="250" />
+        <di:waypoint x="415" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ou7bsy_di" bpmnElement="Flow_0ou7bsy">
+        <di:waypoint x="910" y="250" />
+        <di:waypoint x="962" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t3zywk_di" bpmnElement="Flow_1t3zywk">
+        <di:waypoint x="465" y="250" />
+        <di:waypoint x="705" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="479" y="232" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m7sa88_di" bpmnElement="Flow_1m7sa88">
+        <di:waypoint x="440" y="225" />
+        <di:waypoint x="440" y="120" />
+        <di:waypoint x="530" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="450" y="170" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nve80j_di" bpmnElement="Flow_0nve80j">
+        <di:waypoint x="755" y="250" />
+        <di:waypoint x="810" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nara9v_di" bpmnElement="Flow_1nara9v">
+        <di:waypoint x="630" y="120" />
+        <di:waypoint x="730" y="120" />
+        <di:waypoint x="730" y="225" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
